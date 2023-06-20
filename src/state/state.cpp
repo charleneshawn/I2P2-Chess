@@ -11,27 +11,124 @@
  * 
  * @return int 
  */
-int State::evaluate(){
-  int pion;
-  int white= 0;
-  int black= 0;
-  // [TODO] design your own evaluation function
-  static const int material_table[7] = {0, 2, 6, 7, 8, 20, 100};
+int State::evaluate() {
+  int white = 0;
+  int black = 0;
 
-  for(size_t i=0; i<BOARD_H; i+=1){
-    for(size_t j=0; j<BOARD_W; j+=1){
-      if((pion=this->board.board[0][i][j])){
-        white += material_table[pion];
+  static const int piece_values[7] = {0, 2, 6, 7, 8, 20, 100};
+
+  static const int piece_squares[2][7][6][5] = {
+    // Piece-square values for white
+    {
+      { // Pawns
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1},
+        {2, 2, 2, 2, 2},
+        {3, 3, 3, 3, 3},
+      },
+      { // Knights
+        {1, 2, 3, 2, 1},
+        {2, 3, 4, 3, 2},
+        {3, 4, 6, 4, 3},
+        {2, 3, 4, 3, 2},
+        {1, 2, 3, 2, 1},
+      },
+      { // Bishops
+        {3, 3, 3, 3, 3},
+        {3, 4, 4, 4, 3},
+        {3, 4, 5, 4, 3},
+        {3, 4, 4, 4, 3},
+        {3, 3, 3, 3, 3},
+      },
+      { // Rooks
+        {2, 2, 2, 2, 2},
+        {2, 3, 3, 3, 2},
+        {2, 3, 4, 3, 2},
+        {2, 3, 3, 3, 2},
+        {2, 2, 2, 2, 2},
+      },
+      { // Queen
+        {4, 4, 4, 4, 4},
+        {4, 5, 5, 5, 4},
+        {4, 5, 6, 5, 4},
+        {4, 5, 5, 5, 4},
+        {4, 4, 4, 4, 4},
+      },
+      { // King
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1},
+        {2, 2, 2, 2, 2},
+      },
+    },
+    // Piece-square values for black
+    {
+      { // Pawns
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1},
+        {2, 2, 2, 2, 2},
+        {3, 3, 3, 3, 3},
+      },
+      { // Knights
+        {1, 2, 3, 2, 1},
+        {2, 3, 4, 3, 2},
+        {3, 4, 6, 4, 3},
+        {2, 3, 4, 3, 2},
+        {1, 2, 3, 2, 1},
+      },
+      { // Bishops
+        {3, 3, 3, 3, 3},
+        {3, 4, 4, 4, 3},
+        {3, 4, 5, 4, 3},
+        {3, 4, 4, 4, 3},
+        {3, 3, 3, 3, 3},
+      },
+      { // Rooks
+        {2, 2, 2, 2, 2},
+        {2, 3, 3, 3, 2},
+        {2, 3, 4, 3, 2},
+        {2, 3, 3, 3, 2},
+        {2, 2, 2, 2, 2},
+      },
+      { // Queen
+        {4, 4, 4, 4, 4},
+        {4, 5, 5, 5, 4},
+        {4, 5, 6, 5, 4},
+        {4, 5, 5, 5, 4},
+        {4, 4, 4, 4, 4},
+      },
+      { // King
+        {0, 0, 0, 0, 0},
+        {0, 0, 0, 0, 0},
+        {1, 1, 1, 1, 1},
+        {1, 1, 1, 1, 1},
+        {2, 2, 2, 2, 2},
+      },
+    }
+  };
+
+  for (size_t i = 0; i < BOARD_H; i++) {
+    for (size_t j = 0; j < BOARD_W; j++) {
+      int piece = this->board.board[0][i][j];
+      if (piece != 0) {
+        white += piece_values[piece] + piece_squares[0][piece][i][j];
       }
-      if((pion=this->board.board[1][i][j])){
-        black += material_table[pion];
+      
+      piece = this->board.board[1][i][j];
+      if (piece != 0) {
+        black += piece_values[piece] + piece_squares[1][piece][i][j];
       }
     }
   }
-  int material= white - black;
-  
+
+  int material = white - black;
+
   return material;
 }
+
 
 /**
  * @brief return next state after the move
