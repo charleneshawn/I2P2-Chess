@@ -55,7 +55,7 @@ int minmax::alphabeta_minimax(State* state, int depth, int alpha, int beta,bool 
       bestVal = std::max(bestVal,alphabeta_minimax(nextState, depth-1,alpha,beta,false));
       alpha = std::max(alpha, bestVal);
       if (beta <= alpha){
-        break; // Beta cut-off
+        break;
       }
     }
     return bestVal;
@@ -68,7 +68,7 @@ int minmax::alphabeta_minimax(State* state, int depth, int alpha, int beta,bool 
       delete nextState;
       beta = std::min(beta, bestVal);
       if (beta <= alpha){
-        break; // Beta cut-off
+        break;
       }
     }
     return bestVal;
